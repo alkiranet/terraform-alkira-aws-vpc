@@ -5,12 +5,6 @@ variable "account_id" {
   sensitive   = true
 }
 
-variable "onboard_vpc" {
-  description = "Controls if entire VCP is onboarded"
-  type        = bool
-  default     = false
-}
-
 variable "onboard_subnet" {
   description = "Controls if subnet gets onboarded in lieu of entire cloud network"
   type        = bool
@@ -52,9 +46,10 @@ variable "aws_subnet_tags" {
   default     = {}
 }
 
-variable "billing_tag" {
-  description = "Alkira billing tag"
-  type        = string
+variable "billing_tags" {
+  description = "List of billing tag names to apply to connector"
+  type        = list(string)
+  default     = []
 }
 
 variable "credential" {

@@ -11,13 +11,11 @@ This module makes it easy to provision an [AWS VPC](https://docs.aws.amazon.com/
 Alkira offers enhanced capabilities for how traffic gets routed to and from _Cloud Exchange Points (CXPs)_.
 
 ### Onboard entire VPC CIDR
-To onboard the entire VPC CIDR, set **onboard_vpc = true** in the configuration as follows:
+To onboard the entire VPC CIDR:
 
 ```hcl
 module "aws-vpc" {
   source = "alkiranet/aws-vpc/alkira"
-
-  onboard_vpc = true
 
   network_name = "vpc-aws-east"
   network_cidr = "10.1.0.0/16"
@@ -34,11 +32,11 @@ module "aws-vpc" {
     }
   ]
 
-  cxp         = "US-EAST-2"
-  segment     = "corporate"
-  group       = "nonprod"
-  billing_tag = "cloud"
-  credential  = "aws-auth"
+  cxp          = "US-EAST-2"
+  segment      = "corporate"
+  group        = "nonprod"
+  billing_tags = ["cloud", "network"]
+  credential   = "aws-auth"
 
 }
 ```
@@ -50,7 +48,7 @@ You may also wish to onboard specific subnets. To do this, simply switch the onb
 module "aws-subnet" {
   source = "alkiranet/aws-vpc/alkira"
 
-  onboard_subnet = true
+  onboard_subnet = true # Trigger specific subnets to be onboarded
 
   network_name = "vpc-aws-east"
   network_cidr = "10.1.0.0/16"
@@ -68,11 +66,11 @@ module "aws-subnet" {
     }
   ]
 
-  cxp         = "US-EAST-2"
-  segment     = "corporate"
-  group       = "nonprod"
-  billing_tag = "cloud"
-  credential  = "aws-auth"
+  cxp          = "US-EAST-2"
+  segment      = "corporate"
+  group        = "nonprod"
+  billing_tags = ["cloud", "network"]
+  credential   = "aws-auth"
 
 }
 ```
@@ -84,9 +82,7 @@ By default, Alkira will override the existing default route and route the traffi
 module "aws-vpc-custom" {
   source = "alkiranet/aws-vpc/alkira"
 
-  onboard_vpc     = true
   custom_prefixes = ["pfx-01", "pfx-02"] # Must exist in Alkira
-
 
   network_name = "vpc-aws-east"
   network_cidr = "10.1.0.0/16"
@@ -103,11 +99,11 @@ module "aws-vpc-custom" {
     }
   ]
 
-  cxp         = "US-EAST-2"
-  segment     = "corporate"
-  group       = "nonprod"
-  billing_tag = "cloud"
-  credential  = "aws-auth"
+  cxp          = "US-EAST-2"
+  segment      = "corporate"
+  group        = "nonprod"
+  billing_tags = ["cloud", "network"]
+  credential   = "aws-auth"
 
 }
 ```
@@ -155,7 +151,7 @@ No modules.
 | <a name="input_account_id"></a> [account\_id](#input\_account\_id) | AWS account ID that owns or contains calling entity | `string` | `""` | no |
 | <a name="input_aws_network_tags"></a> [aws\_network\_tags](#input\_aws\_network\_tags) | AWS VPC tags | `map(string)` | `{}` | no |
 | <a name="input_aws_subnet_tags"></a> [aws\_subnet\_tags](#input\_aws\_subnet\_tags) | AWS Subnet tags | `map(string)` | `{}` | no |
-| <a name="input_billing_tag"></a> [billing\_tag](#input\_billing\_tag) | Alkira billing tag | `string` | n/a | yes |
+| <a name="input_billing_tags"></a> [billing\_tags](#input\_billing\_tags) | List of billing tag names to apply to connector | `list(string)` | `[]` | no |
 | <a name="input_cidr"></a> [cidr](#input\_cidr) | Address space of cloud network | `string` | `""` | no |
 | <a name="input_credential"></a> [credential](#input\_credential) | Alkira cloud credential | `string` | n/a | yes |
 | <a name="input_custom_prefixes"></a> [custom\_prefixes](#input\_custom\_prefixes) | Controls if custom prefixes are used for routing from cloud network to CXP; If values are provided, local var 'is\_custom' changes to 'true' | `list(string)` | `[]` | no |
@@ -163,7 +159,6 @@ No modules.
 | <a name="input_group"></a> [group](#input\_group) | Alkira group to add connector to | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | Name of cloud network and Alkira connector | `string` | `""` | no |
 | <a name="input_onboard_subnet"></a> [onboard\_subnet](#input\_onboard\_subnet) | Controls if subnet gets onboarded in lieu of entire cloud network | `bool` | `false` | no |
-| <a name="input_onboard_vpc"></a> [onboard\_vpc](#input\_onboard\_vpc) | Controls if entire VCP is onboarded | `bool` | `false` | no |
 | <a name="input_segment"></a> [segment](#input\_segment) | Alkira segment to add connector to | `string` | n/a | yes |
 | <a name="input_size"></a> [size](#input\_size) | Alkira connector size | `string` | `"SMALL"` | no |
 | <a name="input_subnets"></a> [subnets](#input\_subnets) | Subnets to create for cloud network | `list(map(string))` | n/a | yes |
@@ -172,7 +167,14 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_aws_connector"></a> [aws\_connector](#output\_aws\_connector) | Alkira connector configuration |
-| <a name="output_aws_subnet"></a> [aws\_subnet](#output\_aws\_subnet) | AWS subnet configuration |
-| <a name="output_aws_vpc"></a> [aws\_vpc](#output\_aws\_vpc) | AWS VPC configuration |
+| <a name="output_aws_region"></a> [aws\_region](#output\_aws\_region) | AWS region |
+| <a name="output_connector_id"></a> [connector\_id](#output\_connector\_id) | Alkira connector id |
+| <a name="output_cxp"></a> [cxp](#output\_cxp) | Alkira connector CXP |
+| <a name="output_name"></a> [name](#output\_name) | Network name |
+| <a name="output_rtb_id"></a> [rtb\_id](#output\_rtb\_id) | AWS route table id |
+| <a name="output_segment_id"></a> [segment\_id](#output\_segment\_id) | Alkira connector segment id |
+| <a name="output_size"></a> [size](#output\_size) | Alkira connector size |
+| <a name="output_vpc_cidr"></a> [vpc\_cidr](#output\_vpc\_cidr) | AWS VPC cidr |
+| <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | AWS VPC ID |
+| <a name="output_vpc_subnet"></a> [vpc\_subnet](#output\_vpc\_subnet) | Alkira subnet onboarded to CXP |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

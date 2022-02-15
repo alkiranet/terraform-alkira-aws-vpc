@@ -1,45 +1,49 @@
-output "aws_vpc" {
-  description = "AWS VPC configuration"
-
-  value = [
-    for vpc in aws_vpc.vpc : {
-      vpc_name   = vpc.tags["Name"]
-      vpc_id     = vpc.id
-      vpc_cidr   = vpc.cidr_block
-      rtb_id     = vpc.default_route_table_id
-      vpc_region = data.aws_region.current.name
-    }
-  ]
-
+output "name" {
+  description = "Network name"
+  value       = var.name
 }
 
-output "aws_subnet" {
-  description = "AWS subnet configuration"
-
-  value = [
-    for subnet in merge(aws_subnet.aws_subnet, aws_subnet.alkira_subnet) : {
-      subnet_name = subnet.tags["Name"]
-      subnet_id   = subnet.id
-      subnet_cidr = subnet.cidr_block
-    }
-  ]
-
+output "vpc_id" {
+  description = "AWS VPC ID"
+  value       = aws_vpc.vpc.id
 }
 
-output "aws_connector" {
-  description = "Alkira connector configuration"
+output "vpc_cidr" {
+  description = "AWS VPC cidr"
+  value       = aws_vpc.vpc.cidr_block
+}
 
-  value = [
-    for connector in alkira_connector_aws_vpc.aws_vpc : {
-      name            = connector.name
-      id              = connector.id
-      cxp             = connector.cxp
-      size            = connector.size
-      group           = connector.group
-      segment_id      = connector.segment_id
-      vpc_route_table = connector.vpc_route_table
-      vpc_subnet      = try(connector.vpc_subnet)
-    }
-  ]
+output "rtb_id" {
+  description = "AWS route table id"
+  value       = aws_vpc.vpc.default_route_table_id
+}
 
+output "aws_region" {
+  description = "AWS region"
+  value       = data.aws_region.current.name
+}
+
+output "connector_id" {
+  description = "Alkira connector id"
+  value       = alkira_connector_aws_vpc.aws_vpc.id
+}
+
+output "cxp" {
+  description = "Alkira connector CXP"
+  value       = alkira_connector_aws_vpc.aws_vpc.cxp
+}
+
+output "size" {
+  description = "Alkira connector size"
+  value       = alkira_connector_aws_vpc.aws_vpc.size
+}
+
+output "segment_id" {
+  description = "Alkira connector segment id"
+  value       = alkira_connector_aws_vpc.aws_vpc.segment_id
+}
+
+output "vpc_subnet" {
+  description = "Alkira subnet onboarded to CXP"
+  value       = try(alkira_connector_aws_vpc.aws_vpc.vpc_subnet)
 }

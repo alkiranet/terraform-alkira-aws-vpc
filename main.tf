@@ -16,6 +16,11 @@ locals {
   # If list is not empty, set to true
   is_custom = length(var.custom_prefixes) > 0 ? true : false
 
+  # Filter tag IDs
+  tag_id_list = [
+    for v in data.alkira_billing_tag.tag : v.id
+  ]
+
 }
 
 /*
@@ -45,7 +50,8 @@ data "alkira_group" "group" {
 }
 
 data "alkira_billing_tag" "tag" {
-  name = var.billing_tag
+  for_each = toset(var.billing_tags)
+  name     = each.key
 }
 
 data "alkira_policy_prefix_list" "prefix" {
@@ -60,9 +66,6 @@ data "alkira_policy_prefix_list" "prefix" {
 
 # Create AWS VPC
 resource "aws_vpc" "vpc" {
-
-  count = var.onboard_vpc || var.onboard_subnet ? 1 : 0
-
   cidr_block = var.cidr
   tags       = merge({ "Name" = var.name }, var.aws_network_tags)
 
@@ -95,8 +98,6 @@ resource "aws_subnet" "alkira_subnet" {
 # Connect AWS VPC or subnet(s) through Alkira CXP
 resource "alkira_connector_aws_vpc" "aws_vpc" {
 
-  count = var.onboard_vpc || var.onboard_subnet ? 1 : 0
-
   # AWS values
   name           = var.name
   vpc_id         = one(aws_vpc.vpc[*].id)
@@ -109,7 +110,7 @@ resource "alkira_connector_aws_vpc" "aws_vpc" {
   size            = var.size
   group           = data.alkira_group.group.name
   segment_id      = data.alkira_segment.segment.id
-  billing_tag_ids = [data.alkira_billing_tag.tag.id]
+  billing_tag_ids = local.tag_id_list
   credential_id   = data.alkira_credential.credential.id
 
   # If onboarding specific subnets

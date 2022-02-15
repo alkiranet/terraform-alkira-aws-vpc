@@ -167,7 +167,14 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_aws_connector"></a> [aws\_connector](#output\_aws\_connector) | Alkira connector configuration |
-| <a name="output_aws_subnet"></a> [aws\_subnet](#output\_aws\_subnet) | AWS subnet configuration |
-| <a name="output_aws_vpc"></a> [aws\_vpc](#output\_aws\_vpc) | AWS VPC configuration |
+| <a name="output_aws_region"></a> [aws\_region](#output\_aws\_region) | AWS region |
+| <a name="output_connector_id"></a> [connector\_id](#output\_connector\_id) | Alkira connector id |
+| <a name="output_cxp"></a> [cxp](#output\_cxp) | Alkira connector CXP |
+| <a name="output_name"></a> [name](#output\_name) | Network name |
+| <a name="output_rtb_id"></a> [rtb\_id](#output\_rtb\_id) | AWS route table id |
+| <a name="output_segment_id"></a> [segment\_id](#output\_segment\_id) | Alkira connector segment id |
+| <a name="output_size"></a> [size](#output\_size) | Alkira connector size |
+| <a name="output_vpc_cidr"></a> [vpc\_cidr](#output\_vpc\_cidr) | AWS VPC cidr |
+| <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | AWS VPC ID |
+| <a name="output_vpc_subnet"></a> [vpc\_subnet](#output\_vpc\_subnet) | Alkira subnet onboarded to CXP |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

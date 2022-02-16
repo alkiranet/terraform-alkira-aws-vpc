@@ -105,13 +105,15 @@ resource "alkira_connector_aws_vpc" "aws_vpc" {
   aws_region     = data.aws_region.current.name
   aws_account_id = coalesce(var.account_id, data.aws_caller_identity.current.account_id)
 
-  # CXP values
-  cxp             = var.cxp
-  size            = var.size
-  group           = data.alkira_group.group.name
-  segment_id      = data.alkira_segment.segment.id
-  billing_tag_ids = local.tag_id_list
-  credential_id   = data.alkira_credential.credential.id
+  # Connector values
+  enabled                        = var.enabled
+  cxp                            = var.cxp
+  size                           = var.size
+  group                          = data.alkira_group.group.name
+  segment_id                     = data.alkira_segment.segment.id
+  billing_tag_ids                = local.tag_id_list
+  credential_id                  = data.alkira_credential.credential.id
+  direct_inter_vpc_communication = var.direct_inter_vpc
 
   # If onboarding specific subnets
   dynamic "vpc_subnet" {

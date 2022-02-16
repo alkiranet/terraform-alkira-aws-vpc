@@ -4,8 +4,9 @@ This module makes it easy to provision an [AWS VPC](https://docs.aws.amazon.com/
 ## What it does
 - Build a [VPC](https://aws.amazon.com/vpc/) and one or more [subnets](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html)
 - Create an [Alkira Connector](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/resources/connector_aws_vpc) for the new VPC
-- Apply an existing [Billing Tag](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/billing_tag) to the connector
+- Apply [Billing Tags](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/billing_tag) to the connector
 - Place resources in an existing [segment](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/segment) and [group](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/group)
+- Provide optional capabilities for customized routing
 
 ## Example Usage
 Alkira offers enhanced capabilities for how traffic gets routed to and from _Cloud Exchange Points (CXPs)_.
@@ -76,13 +77,14 @@ module "aws-subnet" {
 ```
 
 ### Custom Routing
-By default, Alkira will override the existing default route and route the traffic to the _CXP_. As an alternative, you can provide a list of prefixes for which traffic must be routed. This can be done by adding the option **custom_prefixes = []** to the configuration.
+By default, Alkira will override the existing default route and route the traffic to the _CXP_. As an alternative, you can provide a list of prefixes for which traffic must be routed. This can be done by adding the option **custom_prefixes = []** to the configuration. As an alternative, you can add **direct_inter_vpc = true** to enable direct inter-vpc communication. Both cannot be enabled at the same time.
 
 ```hcl
 module "aws-vpc-custom" {
   source = "alkiranet/aws-vpc/alkira"
-
-  custom_prefixes = ["pfx-01", "pfx-02"] # Must exist in Alkira
+  
+  custom_prefixes  = ["pfx-01", "pfx-02"] # Must exist in Alkira
+  # direct_inter_vpc = true
 
   network_name = "vpc-aws-east"
   network_cidr = "10.1.0.0/16"
@@ -114,14 +116,14 @@ module "aws-vpc-custom" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
-| <a name="requirement_alkira"></a> [alkira](#requirement\_alkira) | >= 0.8.0 |
+| <a name="requirement_alkira"></a> [alkira](#requirement\_alkira) | >= 0.8.1 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.63 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_alkira"></a> [alkira](#provider\_alkira) | >= 0.8.0 |
+| <a name="provider_alkira"></a> [alkira](#provider\_alkira) | >= 0.8.1 |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.63 |
 
 ## Modules
@@ -156,6 +158,8 @@ No modules.
 | <a name="input_credential"></a> [credential](#input\_credential) | Alkira cloud credential | `string` | n/a | yes |
 | <a name="input_custom_prefixes"></a> [custom\_prefixes](#input\_custom\_prefixes) | Controls if custom prefixes are used for routing from cloud network to CXP; If values are provided, local var 'is\_custom' changes to 'true' | `list(string)` | `[]` | no |
 | <a name="input_cxp"></a> [cxp](#input\_cxp) | Alkira CXP to create connector in | `string` | n/a | yes |
+| <a name="input_direct_inter_vpc"></a> [direct\_inter\_vpc](#input\_direct\_inter\_vpc) | Enable direct inter-vpc communication | `bool` | `false` | no |
+| <a name="input_enabled"></a> [enabled](#input\_enabled) | Status of connector; Default is true | `bool` | `true` | no |
 | <a name="input_group"></a> [group](#input\_group) | Alkira group to add connector to | `string` | n/a | yes |
 | <a name="input_name"></a> [name](#input\_name) | Name of cloud network and Alkira connector | `string` | `""` | no |
 | <a name="input_onboard_subnet"></a> [onboard\_subnet](#input\_onboard\_subnet) | Controls if subnet gets onboarded in lieu of entire cloud network | `bool` | `false` | no |

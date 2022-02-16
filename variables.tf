@@ -5,8 +5,20 @@ variable "account_id" {
   sensitive   = true
 }
 
+variable "enabled" {
+  description = "Status of connector; Default is true"
+  type        = bool
+  default     = true
+}
+
 variable "onboard_subnet" {
   description = "Controls if subnet gets onboarded in lieu of entire cloud network"
+  type        = bool
+  default     = false
+}
+
+variable "direct_inter_vpc" {
+  description = "Enable direct inter-vpc communication"
   type        = bool
   default     = false
 }

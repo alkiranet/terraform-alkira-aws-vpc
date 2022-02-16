@@ -99,11 +99,11 @@ resource "aws_subnet" "alkira_subnet" {
 resource "alkira_connector_aws_vpc" "aws_vpc" {
 
   # AWS values
-  name                           = var.name
-  vpc_id                         = one(aws_vpc.vpc[*].id)
-  vpc_cidr                       = var.onboard_subnet ? null : [one(aws_vpc.vpc[*].cidr_block)]
-  aws_region                     = data.aws_region.current.name
-  aws_account_id                 = coalesce(var.account_id, data.aws_caller_identity.current.account_id)
+  name           = var.name
+  vpc_id         = one(aws_vpc.vpc[*].id)
+  vpc_cidr       = var.onboard_subnet ? null : [one(aws_vpc.vpc[*].cidr_block)]
+  aws_region     = data.aws_region.current.name
+  aws_account_id = coalesce(var.account_id, data.aws_caller_identity.current.account_id)
 
   # Connector values
   enabled                        = var.enabled

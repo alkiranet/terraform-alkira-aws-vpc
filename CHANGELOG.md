@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [1.0.2](https://github.com/alkiranet/terraform-alkira-aws-vpc/compare/v1.0.1...v1.0.2) (2022-02-16)
+
+
+### Bug Fixes
+
+* Formatting ([8322956](https://github.com/alkiranet/terraform-alkira-aws-vpc/commit/8322956f4db46ebfb401c7a636de0fc72bcffef5))
+
 ### [1.0.1](https://github.com/alkiranet/terraform-alkira-aws-vpc/compare/v1.0.0...v1.0.1) (2022-02-15)
 
 

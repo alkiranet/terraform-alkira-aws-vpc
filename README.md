@@ -4,8 +4,9 @@ This module makes it easy to provision an [AWS VPC](https://docs.aws.amazon.com/
 ## What it does
 - Build a [VPC](https://aws.amazon.com/vpc/) and one or more [subnets](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html)
 - Create an [Alkira Connector](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/resources/connector_aws_vpc) for the new VPC
-- Apply an existing [Billing Tag](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/billing_tag) to the connector
+- Apply [Billing Tags](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/billing_tag) to the connector
 - Place resources in an existing [segment](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/segment) and [group](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/group)
+- Provide optional capabilities for customized routing
 
 ## Example Usage
 Alkira offers enhanced capabilities for how traffic gets routed to and from _Cloud Exchange Points (CXPs)_.

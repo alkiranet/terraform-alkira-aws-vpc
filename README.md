@@ -2,10 +2,10 @@
 This module makes it easy to provision an [AWS VPC](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html) and connect it through [Alkira](htts://alkira.com).
 
 ## What it does
-- Build a [VPC](https://aws.amazon.com/vpc/) and one or more [subnets](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html)
+- Build a [VPC](https://aws.amazon.com/vpc/) and one or more [Subnets](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html)
 - Create an [Alkira Connector](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/resources/connector_aws_vpc) for the new VPC
 - Apply [Billing Tags](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/billing_tag) to the connector
-- Place resources in an existing [segment](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/segment) and [group](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/group)
+- Place resources in an existing [Segment](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/segment) and [Group](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/group)
 - Provide optional capabilities for customized routing
 
 ## Example Usage
@@ -15,11 +15,12 @@ Alkira offers enhanced capabilities for how traffic gets routed to and from _Clo
 To onboard the entire VPC CIDR:
 
 ```hcl
-module "aws-vpc" {
+module "aws_vpc" {
   source = "alkiranet/aws-vpc/alkira"
 
-  network_name = "vpc-aws-east"
-  network_cidr = "10.1.0.0/16"
+  name    = "vpc-aws-east"
+  cidr    = "10.1.0.0/16"
+
   subnets = [
     {
       name = "subnet-01"
@@ -35,7 +36,7 @@ module "aws-vpc" {
 
   cxp          = "US-EAST-2"
   segment      = "corporate"
-  group        = "nonprod"
+  group        = "non-prod"
   billing_tags = ["cloud", "network"]
   credential   = "aws-auth"
 
@@ -43,16 +44,17 @@ module "aws-vpc" {
 ```
 
 ### Onboard specific subnets
-You may also wish to onboard specific subnets. To do this, simply switch the onboarding option at the top of the configuration to **onboard_subnet = true** and add an extra **flag** key with **value** _alkira_ to the subnets you wish to onboard. You can do this with additional subnets as needed:
+You may also wish to onboard specific subnets. To do this, simply add onboard_subnet = true and add an extra flag key with value alkira to the subnets you wish to onboard. You can do this with additional subnets as needed:
 
 ```hcl
-module "aws-subnet" {
+module "aws_subnet" {
   source = "alkiranet/aws-vpc/alkira"
 
-  onboard_subnet = true # Trigger specific subnets to be onboarded
+  onboard_subnet = true
 
-  network_name = "vpc-aws-east"
-  network_cidr = "10.1.0.0/16"
+  name    = "vpc-aws-east"
+  cidr    = "10.1.0.0/16"
+
   subnets = [
     {
       name = "subnet-01"
@@ -63,13 +65,13 @@ module "aws-subnet" {
       name = "subnet-02"
       cidr = "10.1.2.0/24"
       zone = "us-east-2b"
-      flag = "alkira" # This subnet will be onboarded in lieu of the entire VPC CIDR
+      flag = "alkira"
     }
   ]
 
   cxp          = "US-EAST-2"
   segment      = "corporate"
-  group        = "nonprod"
+  group        = "non-prod"
   billing_tags = ["cloud", "network"]
   credential   = "aws-auth"
 
@@ -77,17 +79,18 @@ module "aws-subnet" {
 ```
 
 ### Custom Routing
-By default, Alkira will override the existing default route and route the traffic to the _CXP_. As an alternative, you can provide a list of prefixes for which traffic must be routed. This can be done by adding the option **custom_prefixes = []** to the configuration. As an alternative, you can add **direct_inter_vpc = true** to enable direct inter-vpc communication. Both cannot be enabled at the same time.
+By default, Alkira will override the existing default route and route the traffic to the _CXP_. As an alternative, you can provide a list of prefixes for which traffic must be routed. This can be done by adding the option **custom_prefixes = []** to the configuration. As an alternative, you can add **direct_inter_vpc = true** to enable direct inter-vpc communication. Both cannot be enabled at the same time:
 
 ```hcl
-module "aws-vpc-custom" {
+module "aws_vpc_custom" {
   source = "alkiranet/aws-vpc/alkira"
   
-  custom_prefixes  = ["pfx-01", "pfx-02"] # Must exist in Alkira
+  custom_prefixes = ["pfx-01", "pfx-02"]
   # direct_inter_vpc = true
 
-  network_name = "vpc-aws-east"
-  network_cidr = "10.1.0.0/16"
+  name    = "vpc-aws-east"
+  cidr    = "10.1.0.0/16"
+
   subnets = [
     {
       name = "subnet-01"
@@ -103,7 +106,7 @@ module "aws-vpc-custom" {
 
   cxp          = "US-EAST-2"
   segment      = "corporate"
-  group        = "nonprod"
+  group        = "non-prod"
   billing_tags = ["cloud", "network"]
   credential   = "aws-auth"
 

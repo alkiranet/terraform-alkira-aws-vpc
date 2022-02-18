@@ -21,6 +21,11 @@ locals {
     for v in data.alkira_billing_tag.tag : v.id
   ]
 
+  # Filter prefix IDs
+  pfx_id_list = [
+    for v in data.alkira_policy_prefix_list.prefix : v.id
+  ]
+
 }
 
 /*
@@ -55,25 +60,18 @@ data "alkira_billing_tag" "tag" {
 }
 
 data "alkira_policy_prefix_list" "prefix" {
-
-  # Count values
-  count = length(var.custom_prefixes)
-
-  # Index each prefix-list ID
-  name = element(tolist(var.custom_prefixes), count.index)
-
+  for_each = toset(var.custom_prefixes)
+  name     = each.key
 }
 
-# Create AWS VPC
 resource "aws_vpc" "vpc" {
   cidr_block = var.cidr
   tags       = merge({ "Name" = var.name }, var.aws_network_tags)
-
 }
 
-# Create AWS subnets
 resource "aws_subnet" "aws_subnet" {
-  for_each          = local.aws_subnets
+  for_each = local.aws_subnets
+
   vpc_id            = one(aws_vpc.vpc[*].id)
   cidr_block        = each.value.cidr
   availability_zone = each.value.zone
@@ -83,9 +81,9 @@ resource "aws_subnet" "aws_subnet" {
 
 }
 
-# Create AWS subnets that get onboarded to Alkira
 resource "aws_subnet" "alkira_subnet" {
-  for_each          = local.alkira_subnets
+  for_each = local.alkira_subnets
+
   vpc_id            = one(aws_vpc.vpc[*].id)
   cidr_block        = each.value.cidr
   availability_zone = each.value.zone
@@ -95,7 +93,6 @@ resource "aws_subnet" "alkira_subnet" {
 
 }
 
-# Connect AWS VPC or subnet(s) through Alkira CXP
 resource "alkira_connector_aws_vpc" "aws_vpc" {
 
   # AWS values
@@ -142,10 +139,9 @@ resource "alkira_connector_aws_vpc" "aws_vpc" {
     content {
       id              = one(aws_vpc.vpc[*].default_route_table_id)
       options         = local.is_custom ? "ADVERTISE_CUSTOM_PREFIX" : "ADVERTISE_DEFAULT_ROUTE"
-      prefix_list_ids = try([vpc_route_table.value.id])
+      prefix_list_ids = local.pfx_id_list
     }
   }
-
 
   depends_on = [
     aws_vpc.vpc,

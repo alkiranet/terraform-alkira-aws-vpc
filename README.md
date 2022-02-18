@@ -2,7 +2,7 @@
 This module makes it easy to provision an [AWS VPC](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html) and connect it through [Alkira](htts://alkira.com).
 
 ## What it does
-- Build a [VPC](https://aws.amazon.com/vpc/) and one or more [subnets](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html)
+- Build a [VPC](https://aws.amazon.com/vpc/) and one or more [Subnets](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html)
 - Create an [Alkira Connector](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/resources/connector_aws_vpc) for the new VPC
 - Apply [Billing Tags](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/billing_tag) to the connector
 - Place resources in an existing [Segment](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/segment) and [Group](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/group)

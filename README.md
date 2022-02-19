@@ -181,6 +181,8 @@ No modules.
 | <a name="output_rtb_id"></a> [rtb\_id](#output\_rtb\_id) | AWS route table id |
 | <a name="output_segment_id"></a> [segment\_id](#output\_segment\_id) | Alkira connector segment id |
 | <a name="output_size"></a> [size](#output\_size) | Alkira connector size |
+| <a name="output_subnet"></a> [subnet](#output\_subnet) | AWS subnet configuration |
+| <a name="output_subnet_onboarded"></a> [subnet\_onboarded](#output\_subnet\_onboarded) | AWS subnets onboarded to Alkira |
 | <a name="output_vpc_cidr"></a> [vpc\_cidr](#output\_vpc\_cidr) | AWS VPC cidr |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | AWS VPC ID |
 | <a name="output_vpc_subnet"></a> [vpc\_subnet](#output\_vpc\_subnet) | Alkira subnet onboarded to CXP |

@@ -23,6 +23,28 @@ output "aws_region" {
   value       = data.aws_region.current.name
 }
 
+output "subnet" {
+  description = "AWS subnet configuration"
+  value = [
+    for subnet in aws_subnet.aws_subnet : {
+      id   = subnet.id
+      name = subnet.tags.Name
+      cidr = subnet.cidr_block
+    }
+  ]
+}
+
+output "subnet_onboarded" {
+  description = "AWS subnets onboarded to Alkira"
+  value = [
+    for subnet in aws_subnet.alkira_subnet : {
+      id   = subnet.id
+      name = subnet.tags.Name
+      cidr = subnet.cidr_block
+    }
+  ]
+}
+
 output "connector_id" {
   description = "Alkira connector id"
   value       = alkira_connector_aws_vpc.aws_vpc.id

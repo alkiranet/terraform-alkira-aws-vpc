@@ -8,27 +8,22 @@ This module makes it easy to provision an [AWS VPC](https://docs.aws.amazon.com/
 - Place resources in an existing [Segment](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/segment) and [Group](https://registry.terraform.io/providers/alkiranet/alkira/latest/docs/data-sources/group)
 - Provide optional capabilities for customized routing
 
-## Example Usage
-Alkira offers enhanced capabilities for how traffic gets routed to and from _Cloud Exchange Points (CXPs)_.
-
-### Onboard entire VPC CIDR
-To onboard the entire VPC CIDR:
-
+### Basic Usage
 ```hcl
 module "aws_vpc" {
   source = "alkiranet/aws-vpc/alkira"
 
-  name    = "vpc-aws-east"
+  name    = "vpc-east"
   cidr    = "10.1.0.0/16"
 
   subnets = [
     {
-      name = "subnet-01"
+      name = "app-subnet-a"
       cidr = "10.1.1.0/24"
       zone = "us-east-2a"
     },
     {
-      name = "subnet-02"
+      name = "app-subnet-b"
       cidr = "10.1.2.0/24"
       zone = "us-east-2b"
     }
@@ -42,78 +37,7 @@ module "aws_vpc" {
 
 }
 ```
-
-### Onboard specific subnets
-You may also wish to onboard specific subnets. To do this, simply add onboard_subnet = true and add an extra flag key with value alkira to the subnets you wish to onboard. You can do this with additional subnets as needed:
-
-```hcl
-module "aws_subnet" {
-  source = "alkiranet/aws-vpc/alkira"
-
-  onboard_subnet = true
-
-  name    = "vpc-aws-east"
-  cidr    = "10.1.0.0/16"
-
-  subnets = [
-    {
-      name = "subnet-01"
-      cidr = "10.1.1.0/24"
-      zone = "us-east-2a"
-    },
-    {
-      name = "subnet-02"
-      cidr = "10.1.2.0/24"
-      zone = "us-east-2b"
-      flag = "alkira"
-    }
-  ]
-
-  cxp          = "US-EAST-2"
-  segment      = "corporate"
-  group        = "non-prod"
-  billing_tags = ["cloud", "network"]
-  credential   = "aws-auth"
-
-}
-```
-
-### Custom Routing
-By default, Alkira will override the existing default route and route the traffic to the _CXP_. As an alternative, you can provide a list of prefixes for which traffic must be routed. This can be done by adding the option **custom_prefixes = []** to the configuration. As an alternative, you can add **direct_inter_vpc = true** to enable direct inter-vpc communication. Both cannot be enabled at the same time:
-
-```hcl
-module "aws_vpc_custom" {
-  source = "alkiranet/aws-vpc/alkira"
-  
-  custom_prefixes = ["pfx-01", "pfx-02"]
-  # direct_inter_vpc = true
-
-  name    = "vpc-aws-east"
-  cidr    = "10.1.0.0/16"
-
-  subnets = [
-    {
-      name = "subnet-01"
-      cidr = "10.1.1.0/24"
-      zone = "us-east-2a"
-    },
-    {
-      name = "subnet-02"
-      cidr = "10.1.2.0/24"
-      zone = "us-east-2b"
-    }
-  ]
-
-  cxp          = "US-EAST-2"
-  segment      = "corporate"
-  group        = "non-prod"
-  billing_tags = ["cloud", "network"]
-  credential   = "aws-auth"
-
-}
-```
-
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -186,4 +110,4 @@ No modules.
 | <a name="output_vpc_cidr"></a> [vpc\_cidr](#output\_vpc\_cidr) | AWS VPC cidr |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | AWS VPC ID |
 | <a name="output_vpc_subnet"></a> [vpc\_subnet](#output\_vpc\_subnet) | Alkira subnet onboarded to CXP |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
